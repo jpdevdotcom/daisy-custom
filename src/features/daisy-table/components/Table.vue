@@ -1,27 +1,78 @@
-<script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+<script setup lang="ts" generic="T extends { id: RowId }">
+import { computed, onBeforeUnmount, onMounted, ref, useSlots, watch, type Ref } from 'vue'
 import Icon from './Icon.vue'
 import Pagination from './Pagination.vue'
-import RowActions from './RowActions.vue'
-import StatusBadge from './StatusBadge.vue'
-import { REVIEWERS, type TableRow } from '../types'
+import type { RowId, TableColumn } from '../types'
 
-const props = defineProps<{ data: TableRow[] }>()
+const props = withDefaults(
+  defineProps<{
+    data: T[]
+    columns: TableColumn[]
+    selectable?: boolean
+    reorderable?: boolean
+    pageSize?: number
+    pageSizeOptions?: number[]
+    rowLabel?: (row: T) => string
+  }>(),
+  {
+    selectable: true,
+    reorderable: true,
+    pageSize: 10,
+    pageSizeOptions: () => [10, 20, 30, 40, 50],
+    rowLabel: (row: { id: RowId }) => `row ${row.id}`,
+  },
+)
 
-const rows = ref<TableRow[]>([])
-const selected = ref<Set<number>>(new Set())
+const emit = defineEmits<{
+  (e: 'update:selected', ids: RowId[]): void
+  (e: 'reorder', rows: T[]): void
+}>()
+
+defineSlots<
+  {
+    actions?: (props: { row: T }) => unknown
+    empty?: () => unknown
+  } & { [K in `cell-${string}`]?: (props: { row: T; value: any; index: number }) => unknown } & {
+    [K in `header-${string}`]?: (props: { column: TableColumn }) => unknown
+  }
+>()
+
+const slots = useSlots()
+
+const alignClass: Record<'left' | 'center' | 'right', string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+}
+
+function cellValue(row: T, key: string): any {
+  return (row as unknown as Record<string, unknown>)[key]
+}
+
+const columnCount = computed(
+  () =>
+    props.columns.length +
+    (props.reorderable ? 1 : 0) +
+    (props.selectable ? 1 : 0) +
+    (slots.actions ? 1 : 0),
+)
+
+const rows = ref<T[]>([]) as Ref<T[]>
+const selected = ref<Set<RowId>>(new Set())
 const page = ref(1)
-const pageSize = ref(10)
+const pageSize = ref(props.pageSize)
 
 watch(
   () => props.data,
   (data) => {
-    rows.value = data.map((row) => ({ ...row }))
-    selected.value = new Set()
-    page.value = 1
+    rows.value = [...data]
+    const ids = new Set(data.map((row) => row.id))
+    selected.value = new Set([...selected.value].filter((id) => ids.has(id)))
   },
   { immediate: true },
 )
+
+watch(selected, (value) => emit('update:selected', [...value]))
 
 const pageCount = computed(() => Math.max(1, Math.ceil(rows.value.length / pageSize.value)))
 const pageRows = computed(() =>
@@ -39,7 +90,7 @@ const someOnPageSelected = computed(
   () => !allOnPageSelected.value && pageRows.value.some((row) => selected.value.has(row.id)),
 )
 
-function toggleRow(id: number) {
+function toggleRow(id: RowId) {
   const next = new Set(selected.value)
   if (next.has(id)) next.delete(id)
   else next.add(id)
@@ -53,10 +104,10 @@ function togglePage() {
   selected.value = next
 }
 
-const armedId = ref<number | null>(null)
-const draggingId = ref<number | null>(null)
+const armedId = ref<RowId | null>(null)
+const draggingId = ref<RowId | null>(null)
 
-function onDragStart(id: number, event: DragEvent) {
+function onDragStart(id: RowId, event: DragEvent) {
   if (armedId.value !== id) return event.preventDefault()
   draggingId.value = id
   if (event.dataTransfer) {
@@ -65,7 +116,7 @@ function onDragStart(id: number, event: DragEvent) {
   }
 }
 
-function onDragEnter(targetId: number) {
+function onDragEnter(targetId: RowId) {
   if (draggingId.value === null || draggingId.value === targetId) return
 
   const from = rows.value.findIndex((row) => row.id === draggingId.value)
@@ -79,6 +130,7 @@ function onDragEnter(targetId: number) {
 }
 
 function onDragEnd() {
+  if (draggingId.value !== null) emit('reorder', [...rows.value])
   armedId.value = null
   draggingId.value = null
 }
@@ -88,10 +140,6 @@ function disarm() {
 }
 onMounted(() => window.addEventListener('pointerup', disarm))
 onBeforeUnmount(() => window.removeEventListener('pointerup', disarm))
-
-function assignReviewer(row: TableRow, event: Event) {
-  row.reviewer = (event.target as HTMLSelectElement).value
-}
 </script>
 
 <template>
@@ -100,8 +148,9 @@ function assignReviewer(row: TableRow, event: Event) {
       <table class="table">
         <thead class="bg-base-200 text-base-content/70">
           <tr class="border-base-content/10">
-            <th class="w-8"></th>
-            <th class="w-10">
+            <th v-if="reorderable" class="w-8"></th>
+
+            <th v-if="selectable" class="w-10">
               <input
                 type="checkbox"
                 class="checkbox checkbox-sm rounded-sm border-base-content/25"
@@ -111,21 +160,31 @@ function assignReviewer(row: TableRow, event: Event) {
                 @change="togglePage"
               />
             </th>
-            <th class="font-medium">Header</th>
-            <th class="font-medium">Section Type</th>
-            <th class="font-medium">Status</th>
-            <th class="text-right font-medium">Target</th>
-            <th class="text-right font-medium">Limit</th>
-            <th class="font-medium">Reviewer</th>
-            <th class="w-12"></th>
+
+            <th
+              v-for="col in columns"
+              :key="col.key"
+              class="font-medium"
+              :class="[alignClass[col.align ?? 'left'], col.class]"
+            >
+              <slot :name="`header-${col.key}`" :column="col">{{ col.label }}</slot>
+            </th>
+
+            <th v-if="$slots.actions" class="w-12"></th>
           </tr>
         </thead>
 
         <TransitionGroup tag="tbody" name="row">
+          <tr v-if="pageRows.length === 0" key="__empty__" class="border-base-content/10">
+            <td :colspan="columnCount" class="py-10 text-center text-base-content/50">
+              <slot name="empty">No rows to display.</slot>
+            </td>
+          </tr>
+
           <tr
-            v-for="row in pageRows"
+            v-for="(row, index) in pageRows"
             :key="row.id"
-            :draggable="armedId === row.id"
+            :draggable="reorderable && armedId === row.id"
             class="border-base-content/10 hover:bg-base-200/40"
             :class="{
               'bg-base-200': selected.has(row.id),
@@ -137,68 +196,42 @@ function assignReviewer(row: TableRow, event: Event) {
             @drop.prevent
             @dragend="onDragEnd"
           >
-            <td>
+            <td v-if="reorderable">
               <button
                 class="btn btn-ghost btn-xs btn-square cursor-grab text-base-content/40 active:cursor-grabbing"
-                :aria-label="`Reorder ${row.header}`"
+                :aria-label="`Reorder ${rowLabel(row)}`"
                 @pointerdown="armedId = row.id"
               >
                 <Icon name="grip" />
               </button>
             </td>
 
-            <td>
+            <td v-if="selectable">
               <input
                 type="checkbox"
                 class="checkbox checkbox-sm rounded-sm"
-                :aria-label="`Select ${row.header}`"
+                :aria-label="`Select ${rowLabel(row)}`"
                 :checked="selected.has(row.id)"
                 @change="toggleRow(row.id)"
               />
             </td>
 
-            <td class="font-medium">
-              <button class="link link-hover whitespace-nowrap text-left">{{ row.header }}</button>
-            </td>
-
-            <td>
-              <span
-                class="badge badge-outline whitespace-nowrap rounded-full border-base-content/15 px-1.5 text-base-content/80 text-xs"
+            <td
+              v-for="col in columns"
+              :key="col.key"
+              :class="[alignClass[col.align ?? 'left'], col.class]"
+            >
+              <slot
+                :name="`cell-${col.key}`"
+                :row="row"
+                :value="cellValue(row, col.key)"
+                :index="index"
               >
-                {{ row.type }}
-              </span>
+                {{ cellValue(row, col.key) }}
+              </slot>
             </td>
 
-            <td><StatusBadge :status="row.status" /></td>
-
-            <td class="text-right tabular-nums">{{ row.target }}</td>
-            <td class="text-right tabular-nums">{{ row.limit }}</td>
-
-            <td>
-              <template v-if="row.reviewer">{{ row.reviewer }}</template>
-
-              <div v-else class="dropdown dropdown-start">
-                <div
-                  tabindex="0"
-                  role="button"
-                  class="btn btn-sm btn-outline rounded-lg border-base-content/15 text-base-content/80"
-                  :aria-label="`Assign reviewer for ${row.header}`"
-                  @change="assignReviewer(row, $event)"
-                >
-                  Assign reviewer
-                </div>
-                <ul
-                  tabindex="-1"
-                  class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
-                >
-                  <li v-for="name in REVIEWERS" :key="name" :value="name">
-                    <a>{{ name }}</a>
-                  </li>
-                </ul>
-              </div>
-            </td>
-
-            <td><RowActions /></td>
+            <td v-if="$slots.actions"><slot name="actions" :row="row" /></td>
           </tr>
         </TransitionGroup>
       </table>
@@ -209,20 +242,25 @@ function assignReviewer(row: TableRow, event: Event) {
       v-model:page-size="pageSize"
       :total="rows.length"
       :selected-count="selected.size"
+      :show-selection="selectable"
+      :page-size-options="pageSizeOptions"
     />
   </div>
 </template>
 
 <style scoped>
+/* FLIP transition applied by TransitionGroup as rows swap places. */
 .row-move {
   transition: transform 250ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .is-dragging {
   opacity: 1;
-  background-color: #ffffff;
+  background-color: var(--color-base-100, #fff);
 }
 
+/* Rows are only ever reordered, never added or removed mid-drag, so the
+   enter/leave hooks that paging triggers should not animate. */
 .row-enter-active,
 .row-leave-active {
   transition: none;

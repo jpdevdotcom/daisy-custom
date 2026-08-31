@@ -1,8 +1,29 @@
-import type { SectionStatus, SectionType, TableRow } from './types'
+import type { RowStatus } from './components/StatusBadge.vue'
 
-type Tuple = [string, SectionType, SectionStatus, number, number, string]
+export const REVIEWERS = ['Eddie Lake', 'Jamik Tashpulatov', 'Emily Whalen'] as const
 
-// Mirrors the shadcn "dashboard-01" proposal-sections dataset: 68 rows / 7 pages.
+export interface TableRow {
+  id: number
+  header: string
+  type: SectionType
+  status: RowStatus
+  target: number
+  limit: number
+  reviewer: string
+}
+
+type SectionType =
+  | 'Cover page'
+  | 'Table of contents'
+  | 'Narrative'
+  | 'Technical content'
+  | 'Capabilities'
+  | 'Focus Documents'
+  | 'Legal'
+  | 'Financial'
+
+type Tuple = [string, SectionType, RowStatus, number, number, string]
+
 const rows: Tuple[] = [
   ['Cover page', 'Cover page', 'In Process', 18, 5, 'Eddie Lake'],
   ['Table of contents', 'Table of contents', 'Done', 29, 24, 'Eddie Lake'],

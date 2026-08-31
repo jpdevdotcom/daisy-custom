@@ -2,12 +2,21 @@
 import { computed } from 'vue'
 import Icon from './Icon.vue'
 
-const props = defineProps<{
-  page: number
-  pageSize: number
-  total: number
-  selectedCount: number
-}>()
+const props = withDefaults(
+  defineProps<{
+    page: number
+    pageSize: number
+    total: number
+    selectedCount?: number
+    showSelection?: boolean
+    pageSizeOptions?: number[]
+  }>(),
+  {
+    selectedCount: 0,
+    showSelection: true,
+    pageSizeOptions: () => [10, 20, 30, 40, 50],
+  },
+)
 
 const emit = defineEmits<{
   (e: 'update:page', value: number): void
@@ -29,7 +38,10 @@ function onPageSize(event: Event) {
 
 <template>
   <div class="flex flex-wrap items-center justify-between gap-4 px-4 py-3">
-    <p class="text-sm text-base-content/60">{{ selectedCount }} of {{ total }} row(s) selected.</p>
+    <p v-if="showSelection" class="text-sm text-base-content/60">
+      {{ selectedCount }} of {{ total }} row(s) selected.
+    </p>
+    <span v-else></span>
 
     <div class="flex flex-wrap items-center gap-6">
       <label class="flex items-center gap-2 text-sm font-medium">
@@ -39,7 +51,7 @@ function onPageSize(event: Event) {
           :value="pageSize"
           @change="onPageSize"
         >
-          <option v-for="size in [10, 20, 30, 40, 50]" :key="size" :value="size">
+          <option v-for="size in pageSizeOptions" :key="size" :value="size">
             {{ size }}
           </option>
         </select>

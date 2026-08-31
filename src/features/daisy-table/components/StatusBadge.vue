@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import Icon from './Icon.vue'
-import type { SectionStatus } from '../types'
 
-defineProps<{ status: SectionStatus }>()
+export type RowStatus = 'Done' | 'In Process' | 'Not Started'
+
+defineProps<{ status: RowStatus }>()
 </script>
 
 <template>
