@@ -4,13 +4,24 @@ import Icon from './Icon.vue'
 import Pagination from './Pagination.vue'
 import RowActions from './RowActions.vue'
 import StatusBadge from './StatusBadge.vue'
-import { tableData } from '../data'
 import { REVIEWERS, type TableRow } from '../types'
 
-const rows = ref<TableRow[]>([...tableData])
+const props = defineProps<{ data: TableRow[] }>()
+
+const rows = ref<TableRow[]>([])
 const selected = ref<Set<number>>(new Set())
 const page = ref(1)
 const pageSize = ref(10)
+
+watch(
+  () => props.data,
+  (data) => {
+    rows.value = data.map((row) => ({ ...row }))
+    selected.value = new Set()
+    page.value = 1
+  },
+  { immediate: true },
+)
 
 const pageCount = computed(() => Math.max(1, Math.ceil(rows.value.length / pageSize.value)))
 const pageRows = computed(() =>
@@ -72,8 +83,6 @@ function onDragEnd() {
   draggingId.value = null
 }
 
-// A pointerup that lands outside the handle still has to disarm the row,
-// otherwise it stays draggable from anywhere until the next drag.
 function disarm() {
   if (draggingId.value === null) armedId.value = null
 }
@@ -172,7 +181,7 @@ function assignReviewer(row: TableRow, event: Event) {
                 <div
                   tabindex="0"
                   role="button"
-                  class="btn btn-sm btn-outline rounded-lg border-base-content/15 text-base-content/80 m-1"
+                  class="btn btn-sm btn-outline rounded-lg border-base-content/15 text-base-content/80"
                   :aria-label="`Assign reviewer for ${row.header}`"
                   @change="assignReviewer(row, $event)"
                 >
@@ -205,7 +214,6 @@ function assignReviewer(row: TableRow, event: Event) {
 </template>
 
 <style scoped>
-/* FLIP transition applied by TransitionGroup as rows swap places. */
 .row-move {
   transition: transform 250ms cubic-bezier(0.25, 1, 0.5, 1);
 }
@@ -215,8 +223,6 @@ function assignReviewer(row: TableRow, event: Event) {
   background-color: #ffffff;
 }
 
-/* Rows are only ever reordered, never added or removed mid-drag, so the
-   enter/leave hooks that paging triggers should not animate. */
 .row-enter-active,
 .row-leave-active {
   transition: none;
