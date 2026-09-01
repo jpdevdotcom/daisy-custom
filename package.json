@@ -11,7 +11,8 @@
     "test:e2e": "playwright test",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "registry": "node scripts/build-registry.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.102.8",
