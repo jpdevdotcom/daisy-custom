@@ -1,4 +1,4 @@
-import type { RowStatus } from './components/StatusBadge.vue'
+import type { RowStatus } from './StatusBadge.vue'
 
 export const REVIEWERS = ['Eddie Lake', 'Jamik Tashpulatov', 'Emily Whalen'] as const
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import RowActions from './components/RowActions.vue'
-import StatusBadge from './components/StatusBadge.vue'
-import Table from './components/Table.vue'
+import RowActions from './RowActions.vue'
+import StatusBadge from './StatusBadge.vue'
+import Table from './Table.vue'
 import { REVIEWERS, tableData, type TableRow } from './data'
 import type { TableColumn } from './types'
 

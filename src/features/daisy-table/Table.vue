@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, useSlots, watch, type Ref } from 'vue'
 import Icon from './Icon.vue'
 import Pagination from './Pagination.vue'
-import type { RowId, TableColumn } from '../types'
+import type { RowId, TableColumn } from './types'
 
 const props = withDefaults(
   defineProps<{
@@ -12,12 +12,15 @@ const props = withDefaults(
     reorderable?: boolean
     pageSize?: number
     pageSizeOptions?: number[]
+    /** Selected row ids. Supports `v-model:selected`. */
+    selected?: RowId[]
     rowLabel?: (row: T) => string
   }>(),
   {
     selectable: true,
     reorderable: true,
     pageSize: 10,
+    selected: undefined,
     pageSizeOptions: () => [10, 20, 30, 40, 50],
     rowLabel: (row: { id: RowId }) => `row ${row.id}`,
   },
@@ -25,6 +28,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'update:selected', ids: RowId[]): void
+  (e: 'update:pageSize', value: number): void
   (e: 'reorder', rows: T[]): void
 }>()
 
@@ -58,9 +62,31 @@ const columnCount = computed(
 )
 
 const rows = ref<T[]>([]) as Ref<T[]>
-const selected = ref<Set<RowId>>(new Set())
+const selected = ref<Set<RowId>>(new Set(props.selected))
 const page = ref(1)
 const pageSize = ref(props.pageSize)
+
+function sameIds(ids: readonly RowId[], set: Set<RowId>) {
+  return ids.length === set.size && ids.every((id) => set.has(id))
+}
+
+// Both of these are two-way bindable. The inbound watches bail when the value
+// already matches, so a v-model round trip settles instead of looping.
+watch(
+  () => props.selected,
+  (ids) => {
+    if (ids && !sameIds(ids, selected.value)) selected.value = new Set(ids)
+  },
+)
+watch(selected, (value) => emit('update:selected', [...value]))
+
+watch(
+  () => props.pageSize,
+  (value) => {
+    if (value !== pageSize.value) pageSize.value = value
+  },
+)
+watch(pageSize, (value) => emit('update:pageSize', value))
 
 watch(
   () => props.data,
@@ -71,8 +97,6 @@ watch(
   },
   { immediate: true },
 )
-
-watch(selected, (value) => emit('update:selected', [...value]))
 
 const pageCount = computed(() => Math.max(1, Math.ceil(rows.value.length / pageSize.value)))
 const pageRows = computed(() =>
