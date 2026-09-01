@@ -1,0 +1,305 @@
+{
+	"name": "@jpdevdotcom/daisy-table",
+	"description": "A daisyUI + Tailwind data table for Vue, with slot-driven columns.",
+	"repository": "https://github.com/jpdevdotcom/daisy-custom",
+	"version": "0.1.0",
+	"type": "repository",
+	"defaultPaths": {
+		"ui": "./src/components/ui"
+	},
+	"items": [
+		{
+			"name": "icon",
+			"type": "ui",
+			"add": "when-needed",
+			"registryDependencies": [],
+			"dependencies": [],
+			"devDependencies": [],
+			"files": [
+				{
+					"type": "ui",
+					"role": "file",
+					"path": "Icon.vue",
+					"relativePath": "src/features/daisy-table/Icon.vue",
+					"_imports_": [],
+					"registryDependencies": [],
+					"dependencies": [],
+					"devDependencies": []
+				}
+			]
+		},
+		{
+			"name": "pagination",
+			"title": "Pagination",
+			"description": "Page controls and rows-per-page select.",
+			"type": "ui",
+			"add": "when-added",
+			"registryDependencies": [
+				"icon"
+			],
+			"dependencies": [
+				{
+					"ecosystem": "js",
+					"name": "vue",
+					"version": "^3.5.40"
+				}
+			],
+			"devDependencies": [],
+			"files": [
+				{
+					"type": "ui",
+					"role": "file",
+					"path": "Pagination.vue",
+					"relativePath": "src/features/daisy-table/Pagination.vue",
+					"_imports_": [
+						{
+							"import": "./Icon.vue",
+							"item": "icon",
+							"file": {
+								"type": "ui",
+								"path": "Icon.vue"
+							},
+							"meta": {}
+						}
+					],
+					"registryDependencies": [],
+					"dependencies": [],
+					"devDependencies": []
+				}
+			]
+		},
+		{
+			"name": "table",
+			"title": "Table",
+			"description": "Paginated, selectable, drag-reorderable table. Columns come from a `columns` prop and render through per-column `cell-<key>` slots.",
+			"type": "ui",
+			"add": "when-added",
+			"registryDependencies": [
+				"icon",
+				"pagination"
+			],
+			"dependencies": [
+				{
+					"ecosystem": "js",
+					"name": "vue",
+					"version": "^3.5.40"
+				}
+			],
+			"devDependencies": [
+				{
+					"ecosystem": "js",
+					"name": "daisyui"
+				},
+				{
+					"ecosystem": "js",
+					"name": "tailwindcss"
+				}
+			],
+			"files": [
+				{
+					"type": "ui",
+					"role": "file",
+					"path": "Table.vue",
+					"relativePath": "src/features/daisy-table/Table.vue",
+					"_imports_": [
+						{
+							"import": "./Icon.vue",
+							"item": "icon",
+							"file": {
+								"type": "ui",
+								"path": "Icon.vue"
+							},
+							"meta": {}
+						},
+						{
+							"import": "./Pagination.vue",
+							"item": "pagination",
+							"file": {
+								"type": "ui",
+								"path": "Pagination.vue"
+							},
+							"meta": {}
+						},
+						{
+							"import": "./types",
+							"item": "table",
+							"file": {
+								"type": "ui",
+								"path": "types.ts"
+							},
+							"meta": {}
+						}
+					],
+					"registryDependencies": [],
+					"dependencies": [],
+					"devDependencies": []
+				},
+				{
+					"type": "ui",
+					"role": "file",
+					"path": "types.ts",
+					"relativePath": "src/features/daisy-table/types.ts",
+					"_imports_": [],
+					"registryDependencies": [],
+					"dependencies": [],
+					"devDependencies": []
+				},
+				{
+					"type": "ui",
+					"role": "example",
+					"path": "DaisyTable.vue",
+					"relativePath": "src/features/daisy-table/DaisyTable.vue",
+					"_imports_": [
+						{
+							"import": "./RowActions.vue",
+							"item": "row-actions",
+							"file": {
+								"type": "ui",
+								"path": "RowActions.vue"
+							},
+							"meta": {}
+						},
+						{
+							"import": "./StatusBadge.vue",
+							"item": "status-badge",
+							"file": {
+								"type": "ui",
+								"path": "StatusBadge.vue"
+							},
+							"meta": {}
+						},
+						{
+							"import": "./Table.vue",
+							"item": "table",
+							"file": {
+								"type": "ui",
+								"path": "Table.vue"
+							},
+							"meta": {}
+						},
+						{
+							"import": "./data",
+							"item": "table",
+							"file": {
+								"type": "ui",
+								"path": "data.ts"
+							},
+							"meta": {}
+						},
+						{
+							"import": "./types",
+							"item": "table",
+							"file": {
+								"type": "ui",
+								"path": "types.ts"
+							},
+							"meta": {}
+						}
+					],
+					"registryDependencies": [
+						"row-actions",
+						"status-badge"
+					],
+					"dependencies": [
+						{
+							"ecosystem": "js",
+							"name": "vue",
+							"version": "^3.5.40"
+						}
+					],
+					"devDependencies": []
+				},
+				{
+					"type": "ui",
+					"role": "example",
+					"path": "data.ts",
+					"relativePath": "src/features/daisy-table/data.ts",
+					"_imports_": [
+						{
+							"import": "./StatusBadge.vue",
+							"item": "status-badge",
+							"file": {
+								"type": "ui",
+								"path": "StatusBadge.vue"
+							},
+							"meta": {}
+						}
+					],
+					"registryDependencies": [
+						"status-badge"
+					],
+					"dependencies": [],
+					"devDependencies": []
+				}
+			]
+		},
+		{
+			"name": "status-badge",
+			"title": "Status Badge",
+			"description": "Badge with a per-status icon. Example of a cell-slot component.",
+			"type": "ui",
+			"add": "when-added",
+			"registryDependencies": [
+				"icon"
+			],
+			"dependencies": [],
+			"devDependencies": [],
+			"files": [
+				{
+					"type": "ui",
+					"role": "file",
+					"path": "StatusBadge.vue",
+					"relativePath": "src/features/daisy-table/StatusBadge.vue",
+					"_imports_": [
+						{
+							"import": "./Icon.vue",
+							"item": "icon",
+							"file": {
+								"type": "ui",
+								"path": "Icon.vue"
+							},
+							"meta": {}
+						}
+					],
+					"registryDependencies": [],
+					"dependencies": [],
+					"devDependencies": []
+				}
+			]
+		},
+		{
+			"name": "row-actions",
+			"title": "Row Actions",
+			"description": "Row overflow menu. Emits edit, duplicate, favorite, delete.",
+			"type": "ui",
+			"add": "when-added",
+			"registryDependencies": [
+				"icon"
+			],
+			"dependencies": [],
+			"devDependencies": [],
+			"files": [
+				{
+					"type": "ui",
+					"role": "file",
+					"path": "RowActions.vue",
+					"relativePath": "src/features/daisy-table/RowActions.vue",
+					"_imports_": [
+						{
+							"import": "./Icon.vue",
+							"item": "icon",
+							"file": {
+								"type": "ui",
+								"path": "Icon.vue"
+							},
+							"meta": {}
+						}
+					],
+					"registryDependencies": [],
+					"dependencies": [],
+					"devDependencies": []
+				}
+			]
+		}
+	]
+}

@@ -30,6 +30,7 @@
     "@vue/tsconfig": "^0.9.1",
     "daisyui": "^5.7.22",
     "jsdom": "^29.1.1",
+    "jsrepo": "^3.8.1",
     "npm-run-all2": "^9.0.2",
     "prettier": "3.9.5",
     "tailwindcss": "^4.3.3",
