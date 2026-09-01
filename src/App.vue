@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DaisyTable from './features/daisy-table/DaisyTable.vue'
+import DaisyTable from './registry/daisy-table/DaisyTable.vue'
 import './styles.css'
 </script>
 

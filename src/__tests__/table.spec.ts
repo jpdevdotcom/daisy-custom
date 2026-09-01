@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
-import Table from '../features/daisy-table/Table.vue'
-import type { TableColumn } from '../features/daisy-table/types'
+import Table from '../registry/daisy-table/Table.vue'
+import type { TableColumn } from '../registry/daisy-table/types'
 
 // VTU stubs TransitionGroup by default, which replaces the <tbody> tag.
 const globalOpts = { stubs: { transition: false, 'transition-group': false } }

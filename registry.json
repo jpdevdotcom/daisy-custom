@@ -1,16 +1,16 @@
 {
   "name": "customdaisy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repo": "jpdevdotcom/daisy-custom",
   "ref": "main",
-  "dir": "src/features/daisy-table",
+  "dir": "src/registry",
   "defaultPath": "./src/components/ui",
   "items": {
     "icon": {
       "description": "",
       "hidden": true,
       "files": [
-        "Icon.vue"
+        "daisy-table/Icon.vue"
       ],
       "examples": [],
       "requires": [],
@@ -22,7 +22,7 @@
       "description": "Page controls and rows-per-page select.",
       "hidden": false,
       "files": [
-        "Pagination.vue"
+        "daisy-table/Pagination.vue"
       ],
       "examples": [],
       "requires": [
@@ -38,12 +38,12 @@
       "description": "Paginated, selectable, drag-reorderable table with slot-driven columns.",
       "hidden": false,
       "files": [
-        "Table.vue",
-        "types.ts"
+        "daisy-table/Table.vue",
+        "daisy-table/types.ts"
       ],
       "examples": [
-        "DaisyTable.vue",
-        "data.ts"
+        "daisy-table/DaisyTable.vue",
+        "daisy-table/data.ts"
       ],
       "requires": [
         "icon",
@@ -65,7 +65,7 @@
       "description": "Badge with a per-status icon. Example of a cell-slot component.",
       "hidden": false,
       "files": [
-        "StatusBadge.vue"
+        "daisy-table/StatusBadge.vue"
       ],
       "examples": [],
       "requires": [
@@ -79,7 +79,7 @@
       "description": "Row overflow menu. Emits edit, duplicate, favorite, delete.",
       "hidden": false,
       "files": [
-        "RowActions.vue"
+        "daisy-table/RowActions.vue"
       ],
       "examples": [],
       "requires": [
