@@ -1,0 +1,29 @@
+{
+  "name": "daisy-custom",
+  "version": "0.1.0",
+  "description": "Copy Vue + daisyUI components (table, toast, ...) into your project, shadcn-style.",
+  "type": "module",
+  "bin": {
+    "daisy-custom": "index.mjs"
+  },
+  "files": [
+    "index.mjs"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "vue",
+    "daisyui",
+    "tailwind",
+    "components",
+    "registry",
+    "cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpdevdotcom/daisy-custom.git",
+    "directory": "cli"
+  },
+  "license": "MIT"
+}

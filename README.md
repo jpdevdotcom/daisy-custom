@@ -1,6 +1,45 @@
 # daisy-custom
 
-This template should help get you started developing with Vue 3 in Vite.
+A personal Vue + daisyUI component registry. Components are copied into your
+project as source (like shadcn), so you own and can edit them.
+
+## Install components into another project
+
+Run from that project's root (or use `pnpm dlx` / `yarn dlx` / `bunx`):
+
+```sh
+npx daisy-custom@latest list                 # what's available
+npx daisy-custom@latest add toast            # one component
+npx daisy-custom@latest add table --examples # plus its demo files
+```
+
+Files land in `src/components/ui/<component>/`. Anything a component needs
+(e.g. `table` needs `icon` and `pagination`) is copied too, and missing npm
+packages are installed with your package manager. See [cli/README.md](cli/README.md)
+for all options.
+
+The CLI lives in [cli/](cli/) and is published to npm. It downloads components
+from this repo's `main` branch at run time, so pushing here is all it takes to
+ship a component change. Pin a version with `--ref v0.3.0` (any tag or commit).
+
+### Releasing the CLI
+
+Only needed when `cli/index.mjs` changes, not for component changes:
+
+```sh
+cd cli
+npm login               # first time only
+npm version patch       # 0.1.0 -> 0.1.1
+npm publish
+```
+
+## Adding a component to the registry
+
+1. Put its files in `src/registry/<component>/`.
+2. Add an entry to `registry.config.mjs`.
+3. Run `pnpm registry` to regenerate `registry.json`, then commit and push.
+
+## Developing this repo
 
 ## Recommended IDE Setup
 
