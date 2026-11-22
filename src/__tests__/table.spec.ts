@@ -18,7 +18,7 @@ describe('Table', () => {
     // 2 data columns + grip + checkbox (no actions slot)
     expect(w.findAll('thead th')).toHaveLength(4)
     expect(w.findAll('thead th').map((t) => t.text())).toEqual(['', '', 'Name', 'Qty'])
-    expect(w.findAll('tbody tr')[0].findAll('td')[2].text()).toBe('row 1')
+    expect(w.findAll('tbody tr')[0]!.findAll('td')[2]!.text()).toBe('row 1')
   })
 
   it('lets a slot override one column', () => {
@@ -27,14 +27,14 @@ describe('Table', () => {
       global: globalOpts,
       slots: { 'cell-name': '<b>overridden</b>' },
     })
-    expect(w.findAll('tbody tr')[0].findAll('td')[2].html()).toContain('<b>overridden</b>')
+    expect(w.findAll('tbody tr')[0]!.findAll('td')[2]!.html()).toContain('<b>overridden</b>')
   })
 
   it('emits update:selected and accepts an inbound selected prop', async () => {
     const w = mount(Table, { props: { data, columns, selected: [] }, global: globalOpts })
 
-    await w.findAll('tbody input[type="checkbox"]')[0].setValue(true)
-    expect(w.emitted('update:selected')?.at(-1)).toEqual([[1]])
+    await w.findAll('tbody input[type="checkbox"]')[0]!.setValue(true)
+    expect(w.emitted('update:selected')?.slice(-1)[0]).toEqual([[1]])
 
     // inbound: parent pushes a new selection
     await w.setProps({ selected: [2, 3] })
@@ -57,7 +57,7 @@ describe('Table', () => {
     expect(w.findAll('tbody tr')).toHaveLength(20)
 
     await w.find('select').setValue('30')
-    expect(w.emitted('update:pageSize')?.at(-1)).toEqual([30])
+    expect(w.emitted('update:pageSize')?.slice(-1)[0]).toEqual([30])
   })
 
   it('hides structural columns when disabled and shows the empty slot', () => {
