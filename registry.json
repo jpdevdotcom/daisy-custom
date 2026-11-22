@@ -1,6 +1,6 @@
 {
   "name": "customdaisy",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "repo": "jpdevdotcom/daisy-custom",
   "ref": "main",
   "dir": "src/registry",
@@ -87,6 +87,29 @@
       ],
       "exampleRequires": [],
       "dependencies": {},
+      "devDependencies": {}
+    },
+    "toast": {
+      "description": "react-hot-toast for Vue: toast(), toast.success/error/loading/promise/custom and <Toaster>.",
+      "hidden": false,
+      "files": [
+        "toast/index.ts",
+        "toast/store.ts",
+        "toast/types.ts",
+        "toast/useToaster.ts",
+        "toast/Toaster.vue",
+        "toast/ToastBar.vue",
+        "toast/ToastIcon.vue",
+        "toast/RenderValue.ts"
+      ],
+      "examples": [
+        "toast/ToastDemo.vue"
+      ],
+      "requires": [],
+      "exampleRequires": [],
+      "dependencies": {
+        "vue": "^3.5.40"
+      },
       "devDependencies": {}
     }
   }

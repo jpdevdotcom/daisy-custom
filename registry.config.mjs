@@ -1,6 +1,6 @@
 export default {
   name: 'customdaisy',
-  version: '0.2.0',
+  version: '0.3.0',
   repo: 'jpdevdotcom/daisy-custom',
   ref: 'main',
   // Registry root in THIS repo. Each item's `dir` is relative to it.
@@ -36,5 +36,21 @@ export default {
       files: ['RowActions.vue'],
     },
 
+    toast: {
+      dir: 'toast',
+      description:
+        'react-hot-toast for Vue: toast(), toast.success/error/loading/promise/custom and <Toaster>.',
+      files: [
+        'index.ts',
+        'store.ts',
+        'types.ts',
+        'useToaster.ts',
+        'Toaster.vue',
+        'ToastBar.vue',
+        'ToastIcon.vue',
+        'RenderValue.ts',
+      ],
+      examples: ['ToastDemo.vue'],
+    },
   },
 }
