@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends { id: RowId }">
 import { computed, onBeforeUnmount, onMounted, ref, useSlots, watch, type Ref } from 'vue'
-import Icon from './Icon.vue'
+import Icon from '../icon/Icon.vue'
 import Pagination from './Pagination.vue'
 import type { RowId, TableColumn } from './types'
 

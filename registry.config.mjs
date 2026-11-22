@@ -9,29 +9,32 @@ export default {
   defaultPath: './src/components/ui',
 
   items: {
-    icon: { dir: 'daisy-table', files: ['Icon.vue'], hidden: true },
-    pagination: {
-      dir: 'daisy-table',
-      description: 'Page controls and rows-per-page select.',
-      files: ['Pagination.vue'],
-    },
+    // Shared building block; pulled in by whatever imports it.
+    icon: { dir: 'icon', files: ['Icon.vue'], hidden: true },
+
     table: {
-      dir: 'daisy-table',
+      dir: 'table',
       description: 'Paginated, selectable, drag-reorderable table with slot-driven columns.',
       files: ['Table.vue', 'types.ts'],
       examples: ['DaisyTable.vue', 'data.ts'],
       // Used as CSS classes only, so no import exists to detect. Declare by hand.
       devDependencies: { daisyui: '^5.7.22', tailwindcss: '^4.3.3' },
     },
+    pagination: {
+      dir: 'table',
+      description: 'Page controls and rows-per-page select.',
+      files: ['Pagination.vue'],
+    },
     'status-badge': {
-      dir: 'daisy-table',
+      dir: 'table',
       description: 'Badge with a per-status icon. Example of a cell-slot component.',
       files: ['StatusBadge.vue'],
     },
     'row-actions': {
-      dir: 'daisy-table',
+      dir: 'table',
       description: 'Row overflow menu. Emits edit, duplicate, favorite, delete.',
       files: ['RowActions.vue'],
     },
+
   },
 }

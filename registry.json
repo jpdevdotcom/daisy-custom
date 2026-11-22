@@ -10,7 +10,7 @@
       "description": "",
       "hidden": true,
       "files": [
-        "daisy-table/Icon.vue"
+        "icon/Icon.vue"
       ],
       "examples": [],
       "requires": [],
@@ -18,32 +18,16 @@
       "dependencies": {},
       "devDependencies": {}
     },
-    "pagination": {
-      "description": "Page controls and rows-per-page select.",
-      "hidden": false,
-      "files": [
-        "daisy-table/Pagination.vue"
-      ],
-      "examples": [],
-      "requires": [
-        "icon"
-      ],
-      "exampleRequires": [],
-      "dependencies": {
-        "vue": "^3.5.40"
-      },
-      "devDependencies": {}
-    },
     "table": {
       "description": "Paginated, selectable, drag-reorderable table with slot-driven columns.",
       "hidden": false,
       "files": [
-        "daisy-table/Table.vue",
-        "daisy-table/types.ts"
+        "table/Table.vue",
+        "table/types.ts"
       ],
       "examples": [
-        "daisy-table/DaisyTable.vue",
-        "daisy-table/data.ts"
+        "table/DaisyTable.vue",
+        "table/data.ts"
       ],
       "requires": [
         "icon",
@@ -61,11 +45,27 @@
         "tailwindcss": "^4.3.3"
       }
     },
+    "pagination": {
+      "description": "Page controls and rows-per-page select.",
+      "hidden": false,
+      "files": [
+        "table/Pagination.vue"
+      ],
+      "examples": [],
+      "requires": [
+        "icon"
+      ],
+      "exampleRequires": [],
+      "dependencies": {
+        "vue": "^3.5.40"
+      },
+      "devDependencies": {}
+    },
     "status-badge": {
       "description": "Badge with a per-status icon. Example of a cell-slot component.",
       "hidden": false,
       "files": [
-        "daisy-table/StatusBadge.vue"
+        "table/StatusBadge.vue"
       ],
       "examples": [],
       "requires": [
@@ -79,7 +79,7 @@
       "description": "Row overflow menu. Emits edit, duplicate, favorite, delete.",
       "hidden": false,
       "files": [
-        "daisy-table/RowActions.vue"
+        "table/RowActions.vue"
       ],
       "examples": [],
       "requires": [
