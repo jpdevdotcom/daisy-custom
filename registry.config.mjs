@@ -1,5 +1,5 @@
 export default {
-  name: 'customdaisy',
+  name: 'daisy-custom',
   version: '0.3.0',
   repo: 'jpdevdotcom/daisy-custom',
   ref: 'main',
